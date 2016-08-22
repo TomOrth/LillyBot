@@ -91,15 +91,15 @@ bot.on("message", function(message) {
            });
     }
 
-    if (msg.content === (prefix) + "commands") {
-        bot.sendMessage(msg.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Server");
+    if (message.content === (prefix) + "commands") {
+        bot.sendMessage(message.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Server");
     }
 
     if (message.content.startsWith(prefix + "ban")) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
-            if (msg.mentions.length === 1) {
-                for (var user of msg.mentions) {
-                    bot.banMember(user, msg.channel);
+            if (message.mentions.length === 1) {
+                for (var user of message.mentions) {
+                    bot.banMember(user, message.channel);
                     console.log(message.sender.username + " executed: ban against " + user.name);
                     bot.reply(message, user + " has been banned.");
                     return;
@@ -112,9 +112,9 @@ bot.on("message", function(message) {
 
     if (message.content.startsWith(prefix + "kick")) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
-            if (msg.mentions.length === 1) {
-                for (var user of msg.mentions) {
-                    bot.kickMember(user, msg.channel);
+            if (message.mentions.length === 1) {
+                for (var user of message.mentions) {
+                    bot.kickMember(user, message.channel);
                     console.log(cmand(message.sender.username + " executed: kick against " + user.name));
                     bot.reply(message, user + " has been kicked.");
                     return;
