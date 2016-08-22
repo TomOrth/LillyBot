@@ -95,25 +95,20 @@ bot.on("message", msg => {
 });
 
 bot.on("message", function (message) {
-    if (!message.channel.isPrivate) {
+	
         if (message.content === (prefix) + "ping") {
-            var start = new Date(message.timestamp).getTime();
-            bot.sendMessage(message, "Pong!", (error, botMessage) => {
-                var end = new Date(botMessage.timestamp).getTime();
-                bot.updateMessage(botMessage, "Pong! | took " + (end - start) + "ms.");
-            });
-        }
-
-        if (message.content.indexOf("prefix") === 0) {
-            var command = message.substr(prefix.length);
-          }
-    } else {
-        switch (message.content) {
-            case (prefix) + "ping":
-                bot.sendMessage(message, "Pong! You're on **PM**");
-                break;
-        }
-    }
+			if (!message.channel.isPrivate) {
+				var start = new Date(message.timestamp).getTime();
+				bot.sendMessage(message, "Pong!", (error, botMessage) => {
+					var end = new Date(botMessage.timestamp).getTime();
+					bot.updateMessage(botMessage, "Pong! | took " + (end - start) + "ms.");
+				});
+			}
+			else
+			{
+				bot.sendMessage(message, "Pong! You're on **PM**");
+			}
+		}			
 	
 	if(message.content.startsWith (prefix + "ban")) {
 		if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
