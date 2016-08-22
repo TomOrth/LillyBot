@@ -13,15 +13,15 @@ bot.loginWithToken(token);
 
 var connection = mysql.createConnection({
 host: "localhost",
-user: "Viva-Bot",
+user: "LillyBot",
 password: "Bubblegum13",
-database: "viva-bot"
+database: "LillyBott"
 });
 connection.connect();
 
 bot.on('ready', function () {
   console.log('Bot online and ready On ' + bot.servers.length + " servers");
-  bot.setPlayingGame('Use $help | ' + bot.servers.length + " Servers")
+  bot.setPlayingGame('V.1.3 | ' + bot.servers.length + " Servers")
 });
 
             bot.on("serverCreated", function (server) {
@@ -87,22 +87,13 @@ bot.on('ready', function () {
               }
             });
 
-            bot.on("msg", function(message) {
-            if(msg.mentions.length === 1){
-                        for(var user of msg.mentions){
-                            bot.banMember(user, msg.channel);
-                            bot.sendMessage(msg.channel, "Banned, " + user);
-                            return;
-                           }
-                          }
-                        })
-
-            bot.on('serverNewMember', function(server, user,message)
-            {
-                    bot.sendMessage(server.name, ":wave: " + user.username + " joined the server.");
-                    if(server.id === "150294997571207168")
-                             bot.addMemberToRole(user.id, message.server.roles.get("name", "Member"));
-                             bot.sendMessage("Join Role -> `Member`` given to " + message.author.id);
+bot.on('serverNewMember', function(server, user)
+{
+     bot.sendMessage(server.name, ":wave: " + user.username + " joined the server.");
+      if (server.id === "150294997571207168")
+          bot.sendMessage(server.name,"Welcome " + user.username + " to Lilly Lounge! | If you need help with anything you can for support in <#217295164576759810> | Please do not ask in <#150294997571207168>. Also read <#173915068965191681>");
+           bot.addMemberToRole(user.id, server.roles.get("name", "Member"));
+            bot.sendMessage("Join Role -> ``Member`` given to " + user.username);
             });
 
             bot.on("message", msg => {
@@ -131,6 +122,41 @@ bot.on('ready', function () {
                             break;
                     }
                 }
+
+
+	else if(message.content.startsWith (prefix + "ban")) {
+		if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
+		{
+			if(msg.mentions.length === 1){
+            for(var user of msg.mentions){
+                bot.banMember(user, msg.channel);
+				console.log(message.sender.username + " executed: ban against " + user.name);
+				bot.reply(message, user + " has been banned.");
+                return;
+  }}
+		}
+		else
+		{
+			bot.reply(message, "You don't have permissions.");
+		}
+}
+
+else if(message.content.startsWith (prefix + "kick")) {
+if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
+{
+    if(msg.mentions.length === 1){
+    for(var user of msg.mentions){
+        bot.kickMember(user, msg.channel);
+        console.log(cmand(message.sender.username + " executed: kick against " + user.name));
+        bot.reply(message, user + " has been kicked.");
+        return;
+    }}
+}
+else
+{
+    bot.reply(message, "You don't have permissions");
+}
+}
             var input = message.content.toUpperCase();
 
                   switch (input) {
@@ -158,6 +184,10 @@ bot.on('ready', function () {
                        bot.sendMessage(message, "Here is the invite link! https://discordapp.com/oauth2/authorize?client_id=207969547053957120&scope=bot&permissions=8");
                        break;
 
+                    case "FAILFISH":
+                       bot.sendFile(message, "https://cdn.discordapp.com/attachments/156239548781690880/213012982005891079/FailFish.png");
+                       break;
+
             if (message.author.id !== "150077952711852033") { works;}
                     case "I'M SWIFTLY":
                         bot.sendMessage(message, "What can I do for you, Master?");
@@ -168,16 +198,5 @@ bot.on('ready', function () {
                         bot.sendMessage(message, "I'm Live, Come watch me, https://wwww.twitch.tv/swiftly__gaming");
                         break;
 
-                    case "MINGLEE":
-                        sendFile(message, "https://cdn.discordapp.com/attachments/195671480770494464/213013487830433793/MingLee.png");
-                        break;
-
-                    case "KAPPA":
-                        bot.sendFile(message, "https://cdn.discordapp.com/attachments/195671480770494464/213013488006594560/Kappa.png");
-                        break;
-
-                    case "FAILFISH":
-                        bot.sendFile(message, "https://cdn.discordapp.com/attachments/156239548781690880/213012982005891079/FailFish.png");
-                        break;
                 }
             });
