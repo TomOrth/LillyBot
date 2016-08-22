@@ -21,7 +21,7 @@ connection.connect();
 
 bot.on('ready', function () {
   console.log('Bot online and ready On ' + bot.servers.length + " servers");
-  bot.setPlayingGame('V.1.4 | ' + bot.servers.length + " Servers")
+  bot.setPlayingGame('Beta V.1.4 | ' + bot.servers.length + " Servers")
 });
 
             bot.on("serverCreated", function (server) {
