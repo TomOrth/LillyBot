@@ -181,13 +181,3 @@ bot.on('ready', function () {
                         break;
                 }
             });
-
-        case "KAPPA":
-            bot.sendFile(message, "https://cdn.discordapp.com/attachments/195671480770494464/213013488006594560/Kappa.png");
-            break;
-
-        case "FAILFISH":
-            bot.sendFile(message, "https://cdn.discordapp.com/attachments/156239548781690880/213012982005891079/FailFish.png");
-            break;
-    }
-});
