@@ -2,7 +2,6 @@ var Discord = require("discord.js");
 var mysql = require('mysql');
 var bot = new Discord.Client();
 var prefix = "$"
-var unirest = require('unirest')
 fs = require('fs')
 fs.readFile('token.txt', 'utf8', function (err,token) {
     if (err) {
@@ -53,36 +52,23 @@ bot.on("serverDeleted", function (server) {
     })
 });
 
-bot.on("message", function(message) {
-  if (message.content.startsWith(prefix + "Medals")) {
-    let Country = message.content.replace((prefix + "Medals"), '').trimLeft();
-    unirest.get('http://www.medalbot.com/api/v1/medals/'+Country)
-    .end(res => {
-  var d = res.body;
-  if(d.country_name)
-     bot.sendMessage(message, `**${message.author.username}** : **__${d.country_name}'s__** Total Olympic Medal Count: \`${d.total_count}\` `);
-  else {
-     bot.sendMessage(message, `**${message.author.username}** : **That Country has no Medals** or Use $Spelling`);
-     }
-    })
-  }
-});
-
-const banWords = require("C:/Users/glenda/Desktop/Lilly/filterwords.json").filterword;
+const banWords = require("./filterwords.json").filterword;
 
 var isCommander = ["150077952711852033"];
 
 bot.on("message", function(message) {
-banWords.forEach((filterword, index, array) => {
-      if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
-  if (message.content.includes(filterword)) {
-    console.log(message.author.id + " Said a bad word: " + message.content);
-    bot.reply(message, "one or more of the words you used in that sentence are not allowed here.");
-    message.delete();
-    return;
-    }
-   }
- })
+	if(message.server.id === "150294997571207168"){
+		banWords.forEach((filterword, index, array) => {
+		if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
+			if (message.content.includes(filterword)) {
+				console.log(message.author.id + " Said a bad word: " + message.content);
+				bot.reply(message, "one or more of the words you used in that sentence are not allowed here.");
+				message.delete();
+				return;
+				}
+			}
+		})
+	}
 })
 
 bot.on("msg", function(message) {
@@ -103,23 +89,23 @@ bot.on('serverNewMember', function(server, user)
 });
 
 bot.on("message", msg => {
-   if (msg.content === (prefix) + "Commands") {
-    bot.sendMessage(msg.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Medals ` Country` **Only Limited Time** :six: $Server");
+   if (msg.content === (prefix) + "commands") {
+    bot.sendMessage(msg.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Server");
   }
 });
 
 bot.on("message", function (message) {
     if (!message.channel.isPrivate) {
         if (message.content === (prefix) + "ping") {
-            let start = new Date(message.timestamp).getTime();
+            var start = new Date(message.timestamp).getTime();
             bot.sendMessage(message, "Pong!", (error, botMessage) => {
-                let end = new Date(botMessage.timestamp).getTime();
+                var end = new Date(botMessage.timestamp).getTime();
                 bot.updateMessage(botMessage, "Pong! | took " + (end - start) + "ms.");
             });
         }
 
         if (message.content.indexOf("prefix") === 0) {
-            let command = message.substr(prefix.length);
+            var command = message.substr(prefix.length);
           }
     } else {
         switch (message.content) {
