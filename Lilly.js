@@ -84,21 +84,16 @@ bot.on('serverNewMember', function(server, user) {
 bot.on("message", function(message) {
 
     if (message.content === (prefix) + "ping") {
-        if (!message.channel.isPrivate) {
-            var start = new Date(message.timestamp).getTime();
-            bot.sendMessage(message, "Pong!", (error, botMessage) => {
-                var end = new Date(botMessage.timestamp).getTime();
-                bot.updateMessage(botMessage, "Pong! | took " + (end - start) + "ms.");
-            });
-        } else {
-            bot.sendMessage(message, "Pong! You're on **PM**");
-        }
+        var start = new Date(message.timestamp).getTime();
+        bot.sendMessage(message, "Pong!", (error, botMessage) => {
+            var end = new Date(botMessage.timestamp).getTime();
+            bot.updateMessage(botMessage, "Pong! | took " + (end - start) + "ms.");
+           });
     }
 
     if (msg.content === (prefix) + "commands") {
         bot.sendMessage(msg.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Server");
     }
-
 
     if (message.content.startsWith(prefix + "ban")) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
