@@ -114,6 +114,23 @@ bot.on("message", function (message) {
                 break;
         }
     }
+	
+	else if(message.content.startsWith (prefix + "ban")) {
+		if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
+		{
+			if(msg.mentions.length === 1){
+            for(var user of msg.mentions){
+                bot.banMember(user, msg.channel);
+				console.log(message.sender.username + " executed: ban against " + user.name);
+				bot.reply(message, user + " has been banned.");
+                return;
+            }}
+		}
+		else
+		{
+			bot.reply(message, "You don't have permissions.");
+		}
+    }
 var input = message.content.toUpperCase();
 
       switch (input) {
