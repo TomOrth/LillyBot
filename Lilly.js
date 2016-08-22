@@ -110,12 +110,12 @@ bot.on("message", function (message) {
     } else {
         switch (message.content) {
             case (prefix) + "ping":
-                bot.sendMessage(message, "Pong! Your on **PM**");
+                bot.sendMessage(message, "Pong! You're on **PM**");
                 break;
         }
     }
 	
-	else if(message.content.startsWith (prefix + "ban")) {
+	if(message.content.startsWith (prefix + "ban")) {
 		if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
 		{
 			if(msg.mentions.length === 1){
