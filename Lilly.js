@@ -21,7 +21,7 @@ connection.connect();
 
 bot.on('ready', function () {
   console.log('Bot online and ready On ' + bot.servers.length + " servers");
-  bot.setPlayingGame('V.1.3 | ' + bot.servers.length + " Servers")
+  bot.setPlayingGame('V.1.4 | ' + bot.servers.length + " Servers")
 });
 
             bot.on("serverCreated", function (server) {
@@ -117,29 +117,28 @@ bot.on('serverNewMember', function(server, user)
                       }
                 } else {
                     switch (message.content) {
-                        case (prefix) + "ping":
-                            bot.sendMessage(message, "Pong! Your on **PM**");
-                            break;
+                      bot.sendMessage(message, "Pong! You're on **PM**");
+                      break;
                     }
-                }
-
+                  }
 
 	else if(message.content.startsWith (prefix + "ban")) {
-		if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
-		{
-			if(msg.mentions.length === 1){
-            for(var user of msg.mentions){
-                bot.banMember(user, msg.channel);
-				console.log(message.sender.username + " executed: ban against " + user.name);
-				bot.reply(message, user + " has been banned.");
-                return;
-  }}
-		}
-		else
-		{
-			bot.reply(message, "You don't have permissions.");
-		}
-}
+	if(message.content.startsWith (prefix + "ban")) {
+    if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
+    {
+      if(msg.mentions.length === 1){
+        for(var user of msg.mentions){
+          bot.banMember(user, msg.channel);
+          console.log(message.sender.username + " executed: ban against " + user.name);
+          bot.reply(message, user + " has been banned.");
+          return;
+        }}
+      }
+      else
+      {
+        bot.reply(message, "You don't have permissions.");
+      }
+    }
 
 else if(message.content.startsWith (prefix + "kick")) {
 if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
