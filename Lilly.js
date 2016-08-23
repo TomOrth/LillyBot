@@ -1,7 +1,7 @@
 var Discord = require("discord.js");
 var mysql = require('mysql');
 var bot = new Discord.Client();
-var prefix = "$"
+var prefix = "?"
 var unirest = require('unirest')
 fs = require('fs')
 fs.readFile('token.txt', 'utf8', function (err,token) {
@@ -11,17 +11,20 @@ return console.log(err);
 bot.loginWithToken(token);
 });
 
+var config = require('./sql.json');
+
 var connection = mysql.createConnection({
-host: "localhost",
-user: "LillyBot",
-password: "Bubblegum13",
-database: "LillyBott"
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database
 });
 connection.connect();
 
+
 bot.on('ready', function () {
   console.log('Bot online and ready On ' + bot.servers.length + " servers");
-  bot.setPlayingGame('Beta V.1.4 | ' + bot.servers.length + " Servers")
+  bot.setPlayingGame('Beta V.1.4')
 });
 
             bot.on("serverCreated", function (server) {
@@ -58,18 +61,18 @@ bot.on('ready', function () {
             var isCommander = ["150077952711852033"];
 
             bot.on("message", function(message) {
-            	if(message.server.id === "150294997571207168"){
-            		banWords.forEach((filterword, index, array) => {
-            		if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
-            			if (message.content.includes(filterword)) {
-            				console.log(message.author.id + " Said a bad word: " + message.content);
-            				bot.reply(message, "one or more of the words you used in that sentence are not allowed here.");
-            				message.delete();
-            				return;
-            				}
-            			}
-            		})
-            	}
+              if (message.channel.isPrivate && message.server.id === "150294997571207168") {
+                banWords.forEach((filterword, index, array) => {
+                  if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
+                    if (message.content.includes(filterword)) {
+                      console.log(message.author.id + " Said a bad word: " + message.content);
+                     bot.reply(message, "one or more of the words you used in that sentence are not allowed here.");
+                     message.delete();
+                     return;
+                    }
+                  }
+              //  })
+            })
             })
 
             bot.on("message", function(message) {
@@ -96,68 +99,65 @@ bot.on('serverNewMember', function(server, user)
             bot.sendMessage("Join Role -> ``Member`` given to " + user.username);
             });
 
-            bot.on("message", msg => {
-               if (msg.content === (prefix) + "commands") {
-                bot.sendMessage(msg.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Server");
+            bot.on("message", function(message) {
+            var input = message.content.toUpperCase();
+              if (message.content === (prefix) + "ping") {
+                  var start = new Date(message.timestamp).getTime();
+                  bot.sendMessage(message, "Pong!", (error, botMessage) => {
+                      var end = new Date(botMessage.timestamp).getTime();
+                      bot.updateMessage(botMessage, "Pong! | took " + (end - start) + "ms.");
+                     });
+                   }
+
+              if (input === (prefix) + "COMMANDS") {
+                  bot.sendMessage(message.author, "Available Commands: :one: ?Hello Lilly :two: ?Help :three: ?Donate :four: ?Invite :five: ?Server :six: ?Medals :seven: ? Mute+ban+kick :eight: ?Youtube");
               }
-            });
 
-            bot.on("message", function (message) {
-                if (!message.channel.isPrivate) {
-                    if (message.content === (prefix) + "ping") {
-                        var start = new Date(message.timestamp).getTime();
-                        bot.sendMessage(message, "Pong!", (error, botMessage) => {
-                            var end = new Date(botMessage.timestamp).getTime();
-                            bot.updateMessage(botMessage, "Pong! | took " + (end - start) + "ms.");
-                        });
-                    }
+                                if (input.startsWith(prefix + "MUTE")) {
+                                if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
+                                  if (message.mentions.length === 1) {
+                                   for (var user of message.mentions) {
+                                    bot.addMemberToRole(user, "217389708366315520");
+                                    console.log(message.sender.username + " executed: Mute against " + user.name);
+                                    bot.sendMessage(message, user + " has been Muted.")
+                                              }
+                                          }
+                                      } else {
+                                          bot.reply(message, "You don't have permissions");
+                                      }
 
-                    if (message.content.indexOf("prefix") === 0) {
-                        var command = message.substr(prefix.length);
+                    if (input.startsWith(prefix + "BAN")) {
+                        if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
+                            if (message.mentions.length === 1) {
+                                for (var user of message.mentions) {
+                                    bot.banMember(user, message.channel);
+                                    console.log(cmand(message.sender.username + " executed: ban against " + user.name));
+                                    bot.reply(message, user + " has been banned.");
+                                }
+                            }
+                        } else {
+                            bot.reply(message, "You don't have permissions");
+                          }
+
+              if (input.startsWith(prefix + "KICK")) {
+                  if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
+                      if (message.mentions.length === 1) {
+                          for (var user of message.mentions) {
+                              bot.kickMember(user, message.channel);
+                              console.log(cmand(message.sender.username + " executed: kick against " + user.name));
+                              bot.reply(message, user + " has been kicked.");
+                          }
                       }
-                } else {
-                    switch (message.content) {
-                      bot.sendMessage(message, "Pong! You're on **PM**");
-                      break;
+                  } else {
+                      bot.reply(message, "You don't have permissions");
+                  }
+                      }
                     }
                   }
+                })
 
-	else if(message.content.startsWith (prefix + "ban")) {
-	if(message.content.startsWith (prefix + "ban")) {
-    if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
-    {
-      if(msg.mentions.length === 1){
-        for(var user of msg.mentions){
-          bot.banMember(user, msg.channel);
-          console.log(message.sender.username + " executed: ban against " + user.name);
-          bot.reply(message, user + " has been banned.");
-          return;
-        }}
-      }
-      else
-      {
-        bot.reply(message, "You don't have permissions.");
-      }
-    }
-
-else if(message.content.startsWith (prefix + "kick")) {
-if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1)
-{
-    if(msg.mentions.length === 1){
-    for(var user of msg.mentions){
-        bot.kickMember(user, msg.channel);
-        console.log(cmand(message.sender.username + " executed: kick against " + user.name));
-        bot.reply(message, user + " has been kicked.");
-        return;
-    }}
-}
-else
-{
-    bot.reply(message, "You don't have permissions");
-}
-}
-            var input = message.content.toUpperCase();
-
+bot.on("message", function(message) {
+    var input = message.content.toUpperCase();
                   switch (input) {
                      case  (prefix) + "HELLO LILLY":
                         bot.reply(message, "Hello My name is Lilly and I'm a Multi Bot. I was created by: Swiftly");
@@ -187,15 +187,14 @@ else
                        bot.sendFile(message, "https://cdn.discordapp.com/attachments/156239548781690880/213012982005891079/FailFish.png");
                        break;
 
-            if (message.author.id !== "150077952711852033") { works;}
-                    case "I'M SWIFTLY":
+                       case (prefix) + "YOUTUBE":
+                         bot.sendMessage(message, "https://www.youtube.com/channel/UCqQRm9asEPPsd76LHdgKRdw");
+                         break;
+
+                    if (msg.author.id !== "150077952711852033") { works;}
+                    case "IM SWIFTLY":
                         bot.sendMessage(message, "What can I do for you, Master?");
                         break;
 
-            if (message.author.id !== "150077952711852033") { works;}
-                    case (prefix) + "I'M LIVE":
-                        bot.sendMessage(message, "I'm Live, Come watch me, https://wwww.twitch.tv/swiftly__gaming");
-                        break;
-
-                }
-            });
+                };
+});
