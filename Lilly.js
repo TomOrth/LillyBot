@@ -1,10 +1,11 @@
 var Discord = require("discord.js"),
-    bot = new Discord.Client(),
-    mysql = require('mysql'),
-    config = require('./sql.json'),
-    fs = require('fs'),
-    isCommander = ["150077952711852033"],
-    prefix = "$";
+      bot = new Discord.Client(),
+      mysql = require('mysql'),
+      config = require('./sql.json'),
+      fs = require('fs'),
+      isCommander = ["150077952711852033"],
+      version = "Lilly v2.1",
+      prefix = "?";
 
 fs.readFile('token.txt', 'utf8', function (err, token) {
     if (err) {
@@ -24,7 +25,7 @@ connection.connect();
 
 bot.on('ready', function () {
     console.log('Bot online and ready On ' + bot.servers.length + " servers");
-    bot.setPlayingGame('Beta V.2.0');
+    bot.setPlayingGame(version);
 });
 
 bot.on("serverCreated", function (server) {
@@ -67,7 +68,7 @@ bot.on('serverNewMember', function (server, user) {
 
 bot.on("message", function (message) {
     var input = message.content.toUpperCase();
-    if (message.content === (prefix) + "ping") {
+    if (message.content === (prefix) + "PING") {
         var start = new Date(message.timestamp).getTime();
         bot.sendMessage(message, "Pong!", (error, botMessage) => {
             var end = new Date(botMessage.timestamp).getTime();
@@ -83,7 +84,7 @@ bot.on("message", function (message) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
             if (message.mentions.length === 1) {
                 for (var user of message.mentions) {
-                    bot.addMemberToRole(user, "217389708366315520");
+                    bot.addMemberToRole(user, message.server.roles.get("name", "muted"));
                     console.log(message.sender.username + " executed: Mute against " + user.name);
                     bot.sendMessage(message, "Muted User " + user);
                 }
@@ -107,32 +108,29 @@ bot.on("message", function (message) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
             if (message.mentions.length === 1) {
                 for (var user of message.mentions) {
-                    bot.removeMemberFromRole(user, "217389708366315520");
+                    bot.removeMemberFromRole(user, message.server.roles.get("name", "muted"));
                     console.log(message.sender.username + " executed: Un-Mute against " + user.name);
                     bot.sendMessage(message, "Unmuted User " + user);
                 }
             }
         }
+    }
 
-        if (input.startsWith(prefix + "KICK")) {
-            if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
-                if (message.mentions.length === 1) {
-                    for (var user of message.mentions) {
-                        bot.kickMember(user, message.channel);
-                        console.log(message.sender.username + " executed: kick against " + user.name);
-                        bot.reply(message, "Kicked User" + user);
-                    }
+    if (input.startsWith(prefix + "KICK")) {
+        if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
+            if (message.mentions.length === 1) {
+                for (var user of message.mentions) {
+                    bot.kickMember(user, message.channel);
+                    console.log(message.sender.username + " executed: kick against " + user.name);
+                    bot.reply(message, "Kicked User" + user);
                 }
             }
         }
+    }
 
         switch (input) {
             case (prefix) + "HELLO LILLY":
                 bot.reply(message, "Hello My name is Lilly and I'm a Multi Bot. I was created by: Swiftly");
-                break;
-
-            case (prefix) + "SPELLING":
-                bot.reply(message, "Hello, For the Medals Command it must be $Medals 'lower case country'");
                 break;
 
             case (prefix) + "SERVER":
@@ -151,19 +149,15 @@ bot.on("message", function (message) {
                 bot.sendMessage(message, "Here is the invite link! https://discordapp.com/oauth2/authorize?client_id=207969547053957120&scope=bot&permissions=8");
                 break;
 
-            case "FAILFISH":
-                bot.sendFile(message, "https://cdn.discordapp.com/attachments/156239548781690880/213012982005891079/FailFish.png");
-                break;
-
             case (prefix) + "YOUTUBE":
                 bot.sendMessage(message, "https://www.youtube.com/channel/UCqQRm9asEPPsd76LHdgKRdw");
                 break;
 
             case "IM SWIFTLY":
-                if (message.author.id == "150077952711852033")
-                    bot.sendMessage(message, "What can I do for you, Master?");
+                if (message.author.id == "150077952711852033") {
+                  bot.sendMessage(message, "What can I do for you, Master?");
+                }
                 break;
 
         }
-    }
-});
+    });
