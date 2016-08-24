@@ -4,7 +4,7 @@ var Discord = require("discord.js"),
       config = require('./sql.json'),
       fs = require('fs'),
       isCommander = ["150077952711852033"],
-      version = "Lilly v2.1",
+      version = "Lilly v2.0.2",
       prefix = "?";
 
 fs.readFile('token.txt', 'utf8', function (err, token) {
@@ -87,10 +87,14 @@ bot.on("message", function (message) {
                     bot.addMemberToRole(user, message.server.roles.get("name", "muted"));
                     console.log(message.sender.username + " executed: Mute against " + user.name);
                     bot.sendMessage(message, "Muted User " + user);
-                }
-            }
-        }
-    }
+                  }
+              } else {
+                  bot.reply(message, "You need to mention someone!")
+              }
+          } else {
+              bot.reply(message, "You do not have `Bot Commander` role")
+          }
+      }
 
     if (input.startsWith(prefix + "BAN")) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
@@ -99,10 +103,14 @@ bot.on("message", function (message) {
                     bot.banMember(user, message.channel);
                     console.log(message.sender.username + " executed: ban against " + user.name);
                     bot.reply(message, "Banned User " + user);
-                }
-            }
-        }
-    }
+                  }
+              } else {
+                  bot.reply(message, "You need to mention someone!")
+              }
+          } else {
+              bot.reply(message, "You do not have `Bot Commander` role")
+          }
+      }
 
     if (input.startsWith(prefix + "UNMUTE")) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
@@ -111,10 +119,14 @@ bot.on("message", function (message) {
                     bot.removeMemberFromRole(user, message.server.roles.get("name", "muted"));
                     console.log(message.sender.username + " executed: Un-Mute against " + user.name);
                     bot.sendMessage(message, "Unmuted User " + user);
-                }
-            }
-        }
-    }
+                  }
+              } else {
+                  bot.reply(message, "You need to mention someone!")
+              }
+          } else {
+              bot.reply(message, "You do not have `Bot Commander` role")
+          }
+      }
 
     if (input.startsWith(prefix + "KICK")) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
@@ -123,10 +135,14 @@ bot.on("message", function (message) {
                     bot.kickMember(user, message.channel);
                     console.log(message.sender.username + " executed: kick against " + user.name);
                     bot.reply(message, "Kicked User" + user);
-                }
-            }
-        }
-    }
+                  }
+              } else {
+                  bot.reply(message, "You need to mention someone!")
+              }
+          } else {
+              bot.reply(message, "You do not have `Bot Commander` role")
+          }
+      }
 
         switch (input) {
             case (prefix) + "HELLO LILLY":
@@ -136,6 +152,10 @@ bot.on("message", function (message) {
             case (prefix) + "SERVER":
                 bot.reply(message, "Hello, Here is my Server Invite, https://discord.gg/SwiftlyGaming. :smile:");
                 break;
+
+                case "WHATSMYID":
+                    bot.sendMessage(message, "Your ID is: `" + message.author.id + "`");
+                    break;
 
             case (prefix) + "HELP":
                 bot.reply(message, "Hello, Type $Commands if needed or any other help, Just join my Server, https://discord.gg/SwiftlyGaming. :smile:");
