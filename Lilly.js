@@ -4,7 +4,7 @@ var Discord = require("discord.js"),
       config = require('./sql.json'),
       fs = require('fs'),
       isCommander = ["150077952711852033"],
-      version = "Lilly v2.0.2",
+      version = "Lilly v2.0.4",
       prefix = "$";
 
 fs.readFile('token.txt', 'utf8', function (err, token) {
@@ -68,7 +68,7 @@ bot.on('serverNewMember', function (server, user) {
 
 bot.on("message", function (message) {
     var input = message.content.toUpperCase();
-    if (message.content === (prefix) + "PING") {
+    if (input === (prefix) + "PING") {
         var start = new Date(message.timestamp).getTime();
         bot.sendMessage(message, "Pong!", (error, botMessage) => {
             var end = new Date(botMessage.timestamp).getTime();
