@@ -4,7 +4,7 @@ var Discord = require("discord.js"),
       config = require('./sql.json'),
       fs = require('fs'),
       isCommander = ["150077952711852033"],
-      version = "Lilly v2.0.6",
+      version = "Lilly v2.0.7",
       prefix = "$";
 
 fs.readFile('token.txt', 'utf8', function (err, token) {
@@ -82,7 +82,7 @@ bot.on("message", function (message) {
         bot.sendMessage(message.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Server :six: $ Ban,Kick,Mute and Unmute :seven: Youtube");
     }
 
-    if (message.content === (prefix + "SERVERINFO")) {
+    if (input === (prefix + "SERVERINFO")) {
             console.log(message.sender.username + " executed: server");
             bot.sendMessage(message,
                 "Server: " + message.server.name +
