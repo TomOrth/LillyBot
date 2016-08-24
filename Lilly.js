@@ -4,7 +4,7 @@ var Discord = require("discord.js"),
       config = require('./sql.json'),
       fs = require('fs'),
       isCommander = ["150077952711852033"],
-      version = "Lilly v2.0.4",
+      version = "Lilly v2.0.6",
       prefix = "$";
 
 fs.readFile('token.txt', 'utf8', function (err, token) {
@@ -58,13 +58,15 @@ bot.on("serverDeleted", function (server) {
 });
 
 
-bot.on('serverNewMember', function (server, user) {
-    bot.sendMessage(server.name, ":wave: " + user.username + " joined the server.");
-    if (server.id === "150294997571207168")
-        bot.sendMessage(server.name, "Welcome " + user.username + " to Lilly Lounge! | If you need help with anything you can for support in <#217295164576759810> | Please do not ask in <#150294997571207168>. Also read <#173915068965191681>");
-    bot.addMemberToRole(user.id, server.roles.get("name", "Member"));
-    bot.sendMessage("Join Role -> ``Member`` given to " + user.username);
-});
+bot.on('serverNewMember', function(server, user) {
+    if (server.id === "150294997571207168") {
+        bot.sendMessage(server.name, "Welcome " + user.username + " to Lilly Lounge! | Read #rules Please");
+        bot.addMemberToRole(user.id, server.roles.get("name", "Member"));
+        bot.sendMessage("Join Role -> Member given to " + user.username);
+    } else {
+            bot.sendMessage(" Welcome " + user.username + " to " + server.name);
+        }
+    });
 
 bot.on("message", function (message) {
     var input = message.content.toUpperCase();
@@ -79,6 +81,20 @@ bot.on("message", function (message) {
     if (input === (prefix) + "COMMANDS") {
         bot.sendMessage(message.author, "Available Commands: :one: $Hello Lilly :two: $Help :three: $Donate :four: $Invite :five: $Server :six: $ Ban,Kick,Mute and Unmute :seven: Youtube");
     }
+
+    if (message.content === (prefix + "SERVERINFO")) {
+            console.log(message.sender.username + " executed: server");
+            bot.sendMessage(message,
+                "Server: " + message.server.name +
+                "\nOwner: " + message.server.owner.name +
+                "\nCreated: " + message.server.createdAt +
+                "\nRegion: " + message.server.region +
+                "\nServer ID: " + message.server.id +
+                "\nMembers: " + message.server.members.length +
+                "\nChannels: " + message.server.channels.length +
+                "\nRoles: " + message.server.roles.map(r => r.name).join(", ") +
+                "\n" + message.server.iconURL);
+        }
 
     if (input.startsWith(prefix + "MUTE")) {
         if (bot.memberHasRole(message.author, message.server.roles.get("name", "Bot Commander")) || isCommander.indexOf(message.sender.id) > -1) {
