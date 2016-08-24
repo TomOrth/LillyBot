@@ -5,7 +5,7 @@ var Discord = require("discord.js"),
       fs = require('fs'),
       isCommander = ["150077952711852033"],
       version = "Lilly v2.0.2",
-      prefix = "?";
+      prefix = "$";
 
 fs.readFile('token.txt', 'utf8', function (err, token) {
     if (err) {
