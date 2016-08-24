@@ -4,7 +4,7 @@ var Discord = require("discord.js"),
       config = require('./sql.json'),
       fs = require('fs'),
       isCommander = ["150077952711852033"],
-      version = "Lilly v2.0.7",
+      version = "Lilly v2.1",
       prefix = "$";
 
 fs.readFile('token.txt', 'utf8', function (err, token) {
@@ -83,17 +83,17 @@ bot.on("message", function (message) {
     }
 
     if (input === (prefix + "SERVERINFO")) {
+            bot.options.disableEveryone = "true";
             console.log(message.sender.username + " executed: server");
-            bot.sendMessage(message,
-                "Server: " + message.server.name +
+            bot.sendMessage(message, "**" + message.server.name + "**" +
+              "```" + "\nMember Count: " + message.server.members.length +
+                "\nChannel Count: " + message.server.channels.length +
+                "\nServer Region: " + message.server.region +
                 "\nOwner: " + message.server.owner.name +
                 "\nCreated: " + message.server.createdAt +
-                "\nRegion: " + message.server.region +
-                "\nServer ID: " + message.server.id +
-                "\nMembers: " + message.server.members.length +
-                "\nChannels: " + message.server.channels.length +
-                "\nRoles: " + message.server.roles.map(r => r.name).join(", ") +
-                "\n" + message.server.iconURL);
+                "\nServer Icon: " + message.server.iconURL +
+
+                "\nRoles: " + message.server.roles.map(r => r.name).join(", ") + "```");
         }
 
     if (input.startsWith(prefix + "MUTE")) {
